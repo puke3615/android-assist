@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.puke.assist.api.Assist;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -15,7 +17,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTest(View view) {
-        showToast("34567890p-[]");
+        int a = 1;
+        int b = 2;
+        int result = Assist.plus(a, b);
+        showToast(String.format("%s + %s = %s", a, b, result));
     }
 
     private void showToast(String message) {
