@@ -41,5 +41,5 @@ dependencies {
 //    api project(':assist-api')
 //    api project(':assist-core')
 
-    implementation 'com.github.puke3615:android-assist:v0.0.1'
+    implementation 'com.github.puke3615:android-assist:v0.0.2'
 }
