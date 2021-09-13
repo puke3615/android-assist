@@ -1,9 +1,10 @@
 package com.puke.assist;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.puke.assist.api.Assist;
 
@@ -16,9 +17,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTest(View view) {
-        int a = 1;
-        int b = 2;
-        int result = Assist.plus(a, b);
-        Assist.showToast(this, String.format("Compute: %s + %s = %s", a, b, result));
+        AppConfig appConfig = Assist.getConfig(AppConfig.class);
+        Toast.makeText(this, "AppId = " + appConfig.appId(), Toast.LENGTH_SHORT).show();
     }
 }

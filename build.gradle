@@ -13,6 +13,10 @@ buildscript {
     }
 }
 
+ext {
+    group = 'com.github.puke3615'
+}
+
 allprojects {
     repositories {
         google()

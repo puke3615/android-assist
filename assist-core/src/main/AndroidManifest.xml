@@ -2,4 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.puke.assist.core">
 
+    <application>
+        <activity
+            android:name=".AssistConfigActivity"
+            android:launchMode="singleTask" />
+    </application>
+
 </manifest>
