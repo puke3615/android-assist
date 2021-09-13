@@ -109,7 +109,7 @@ public class AssistConfigActivity extends Activity {
                             relaunchApp(AssistConfigActivity.this);
                         }
                     })
-                    .setPositiveButton(R.string.cancel, null)
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
         } else {
             doSave(updatedItems);
