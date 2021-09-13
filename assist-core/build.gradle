@@ -27,7 +27,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    // noinspection GradleCompatible
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
 
     compileOnly project(':assist-api')
 }

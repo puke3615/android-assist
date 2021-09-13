@@ -25,13 +25,9 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.aar", "*.jar"])
 
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
-
 //    api project(':assist-api')
 //    api project(':assist-core')
 
-    implementation 'com.github.puke3615.android-assist:assist-api:0.0.5'
-    implementation 'com.github.puke3615.android-assist:assist-core:0.0.5'
+    implementation 'com.github.puke3615.android-assist:assist-api:0.0.7'
+    implementation 'com.github.puke3615.android-assist:assist-core:0.0.7'
 }
