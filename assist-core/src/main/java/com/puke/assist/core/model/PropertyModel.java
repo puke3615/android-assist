@@ -1,6 +1,7 @@
 package com.puke.assist.core.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author puke
@@ -14,7 +15,9 @@ public class PropertyModel implements Serializable {
 
     public String value;
 
-    public String options;
+    public List<String> options;
+
+    public List<String> enumTipsOptions;
 
     public String currentValue;
 

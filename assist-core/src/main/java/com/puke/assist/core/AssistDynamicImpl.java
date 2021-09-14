@@ -2,6 +2,7 @@ package com.puke.assist.core;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 
 import com.puke.assist.api.Assist;
@@ -43,13 +44,17 @@ public class AssistDynamicImpl {
         application.registerActivityLifecycleCallbacks(new ShakeHelper(application, new ShakeHelper.OnShakeListener() {
             @Override
             public void onShake() {
-                if ((!(getCurrentActivity() instanceof AssistConfigActivity))) {
-                    Intent intent = new Intent(application, AssistConfigActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    application.startActivity(intent);
-                }
+                openConfigPage(application);
             }
         }));
+    }
+
+    public static void openConfigPage(Context context) {
+        if ((!(getCurrentActivity() instanceof AssistConfigActivity))) {
+            Intent intent = new Intent(context, AssistConfigActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
     }
 
     private static Activity getCurrentActivity() {

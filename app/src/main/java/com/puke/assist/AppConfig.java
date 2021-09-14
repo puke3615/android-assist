@@ -16,21 +16,15 @@ public interface AppConfig {
     @Property(tips = "颜色", defaultValue = "RED")
     Color color();
 
-    @Property(defaultValue = "[appId]")
-    String appId();
+    @Property(tips = "名称")
+    String name();
 
-    @Property(defaultValue = "[appKey]")
-    String appKey();
+    @Property(tips = "字符串选择", defaultValue = "abc", options = "fsef,abc,yui,fsf,sfas")
+    String stringOptionValue();
 
-    @Property(defaultValue = "[appServer]")
-    String appServer();
+    @Property(tips = "开关控制", defaultValue = "true")
+    boolean enable();
 
-    @Property(defaultValue = "abc", options = "fsef,abc,yui,fsf,sfas")
-    String serverSecret();
-
-    @Property(tips = "展示样板间拓展能力", defaultValue = "true")
-    boolean showCustomView();
-
-    @Property(tips = "禁言时长 (单位:秒)", defaultValue = "300")
-    int muteSeconds();
+    @Property(tips = "整型", defaultValue = "300")
+    int intValue();
 }

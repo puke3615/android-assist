@@ -1,6 +1,7 @@
 package com.puke.assist.api;
 
 import android.app.Application;
+import android.content.Context;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -19,6 +20,7 @@ public class Assist {
 
     private static List<Class<?>> configTypes;
     private static Method dynamicImplMethod;
+    private static Class<?> dynamicImplType;
 
     public static void init(Application application) {
         init(application, null);
@@ -26,7 +28,6 @@ public class Assist {
 
     public static void init(Application application, List<Class<?>> configTypes) {
         Assist.configTypes = configTypes;
-        final Class<?> dynamicImplType;
         try {
             dynamicImplType = Class.forName("com.puke.assist.core.AssistDynamicImpl");
         } catch (ClassNotFoundException ignored) {
@@ -74,6 +75,18 @@ public class Assist {
         );
         configInstances.put(configType, configInstance);
         return configInstance;
+    }
+
+    public static boolean openConfigPage(Context context) {
+        if (dynamicImplType != null) {
+            String methodName = "openConfigPage";
+            try {
+                dynamicImplType.getMethod(methodName, Context.class).invoke(null, context);
+                return true;
+            } catch (Exception ignored) {
+            }
+        }
+        return false;
     }
 
     private static Object getDefaultValue(Class<?> configType, Method method) {

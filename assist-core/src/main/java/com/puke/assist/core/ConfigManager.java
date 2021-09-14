@@ -99,32 +99,42 @@ class ConfigManager {
                 String defaultValue = property.defaultValue();
                 if (!TextUtils.isEmpty(propertyOptions)) {
                     // Use options if set
-                    propertyModel.options = propertyOptions;
                     List<String> options = Arrays.asList(propertyOptions.split(","));
-                    int defaultIndex = options.indexOf(defaultValue);
-                    propertyModel.setValue(String.valueOf(Math.max(defaultIndex, 0)));
+                    propertyModel.options = options;
+                    final String propertyValue;
+                    if (!TextUtils.isEmpty(defaultValue) && options.contains(defaultValue)) {
+                        propertyValue = defaultValue;
+                    } else {
+                        propertyValue = options.get(0);
+                    }
+                    propertyModel.setValue(propertyValue);
                 } else if (Enum.class.isAssignableFrom(returnType)) {
                     try {
                         // Convert enum to options
                         boolean implementEnumTips = EnumTips.class.isAssignableFrom(returnType);
                         List<String> options = new ArrayList<>();
+                        List<String> enumTipsOptions = new ArrayList<>();
                         Enum[] values = (Enum[]) returnType.getMethod("values").invoke(null);
-                        int defaultIndex = 0;
+                        String propertyValue = null;
                         if (values != null) {
-                            for (int i = 0; i < values.length; i++) {
-                                Enum item = values[i];
+                            for (Enum item : values) {
                                 if (TextUtils.equals(item.name(), defaultValue)) {
-                                    defaultIndex = i;
+                                    propertyValue = defaultValue;
                                 }
+                                options.add(String.valueOf(item));
                                 if (implementEnumTips) {
-                                    options.add(((EnumTips) item).getTips());
-                                } else {
-                                    options.add(String.valueOf(item));
+                                    enumTipsOptions.add(((EnumTips) item).getTips());
                                 }
                             }
+                            if (propertyValue == null) {
+                                propertyValue = values[0].name();
+                            }
                         }
-                        propertyModel.options = TextUtils.join(",", options);
-                        propertyModel.setValue(String.valueOf(defaultIndex));
+                        propertyModel.options = options;
+                        if (implementEnumTips) {
+                            propertyModel.enumTipsOptions = enumTipsOptions;
+                        }
+                        propertyModel.setValue(propertyValue);
                     } catch (Exception e) {
                         throw new RuntimeException("Parse options from enum failed", e);
                     }

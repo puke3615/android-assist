@@ -15,6 +15,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -23,10 +24,14 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.puke.assist.core.model.ConfigModel;
 import com.puke.assist.core.model.PropertyModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -42,11 +47,18 @@ public class AssistConfigActivity extends Activity {
     private static final int TYPE_PROP_BOOLEAN = 2;
     private static final int TYPE_PROP_OPTION = 3;
 
+    private static final List<Integer> PROPERTY_ORDER = Arrays.asList(
+            TYPE_PROP_INPUT,
+            TYPE_PROP_BOOLEAN,
+            TYPE_PROP_OPTION
+    );
+
     private final List<ItemData> dataList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_assist_config);
 
         RecyclerView recyclerView = findViewById(R.id.assist_config_recycler_view);
@@ -145,17 +157,28 @@ public class AssistConfigActivity extends Activity {
                 continue;
             }
 
+            // Config item
             dataList.add(new ItemData(TYPE_CONFIG, configModel, null));
+
+            // Property item
+            List<ItemData> properties = new ArrayList<>();
             for (PropertyModel propertyModel : configModel.properties) {
                 Class<?> propertyType = propertyModel.type;
                 if (propertyType == Boolean.class || propertyType == boolean.class) {
-                    dataList.add(new ItemData(TYPE_PROP_BOOLEAN, configModel, propertyModel));
-                } else if (!TextUtils.isEmpty(propertyModel.options)) {
-                    dataList.add(new ItemData(TYPE_PROP_OPTION, configModel, propertyModel));
+                    properties.add(new ItemData(TYPE_PROP_BOOLEAN, configModel, propertyModel));
+                } else if (Util.isNotEmpty(propertyModel.options)) {
+                    properties.add(new ItemData(TYPE_PROP_OPTION, configModel, propertyModel));
                 } else {
-                    dataList.add(new ItemData(TYPE_PROP_INPUT, configModel, propertyModel));
+                    properties.add(new ItemData(TYPE_PROP_INPUT, configModel, propertyModel));
                 }
             }
+            Collections.sort(properties, new Comparator<ItemData>() {
+                @Override
+                public int compare(ItemData o1, ItemData o2) {
+                    return PROPERTY_ORDER.indexOf(o1.type) - PROPERTY_ORDER.indexOf(o2.type);
+                }
+            });
+            dataList.addAll(properties);
         }
         return dataList;
     }
@@ -241,16 +264,19 @@ public class AssistConfigActivity extends Activity {
                     optionHolder.tips.setText(getTips(propertyModel));
 
                     optionHolder.spinner.setOnItemSelectedListener(null);
+                    final List<String> options = propertyModel.options;
+                    final List<String> enumTipsOptions = propertyModel.enumTipsOptions;
                     optionHolder.spinner.setAdapter(new ArrayAdapter<>(
                             AssistConfigActivity.this,
                             android.R.layout.simple_spinner_dropdown_item,
-                            propertyModel.options.split(","))
-                    );
-                    optionHolder.spinner.setSelection(Integer.parseInt(propertyModel.currentValue));
+                            Util.isNotEmpty(enumTipsOptions) ? enumTipsOptions : options
+                    ));
+                    int currentIndex = options.indexOf(propertyModel.currentValue);
+                    optionHolder.spinner.setSelection(Math.max(currentIndex, 0));
                     optionHolder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            propertyModel.currentValue = String.valueOf(position);
+                            propertyModel.currentValue = options.get(position);
                         }
 
                         @Override
