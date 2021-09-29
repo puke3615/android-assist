@@ -32,5 +32,5 @@ dependencies {
 
 //    compileOnly project(':assist-api')
 
-    api 'com.github.puke3615.android-assist:assist-core:0.0.8'
+    api 'com.github.puke3615.android-assist:assist-api:0.0.8'
 }
