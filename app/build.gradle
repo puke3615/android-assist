@@ -25,9 +25,9 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.aar", "*.jar"])
 
-    api project(':assist-api')
-    api project(':assist-core')
+//    api project(':assist-api')
+//    api project(':assist-core')
 
-//    implementation 'com.github.puke3615.android-assist:assist-api:0.0.7'
-//    implementation 'com.github.puke3615.android-assist:assist-core:0.0.7'
+    implementation 'com.github.puke3615.android-assist:assist-api:0.0.9'
+    implementation 'com.github.puke3615.android-assist:assist-core:0.0.9'
 }
