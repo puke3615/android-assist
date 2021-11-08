@@ -30,7 +30,7 @@ dependencies {
     // noinspection GradleCompatible
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 
-//    compileOnly project(':assist-api')
+    compileOnly project(':assist-api')
 
-    api 'com.github.puke3615.android-assist:assist-api:0.0.8'
+//    api 'com.github.puke3615.android-assist:assist-api:0.0.9'
 }

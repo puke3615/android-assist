@@ -142,6 +142,7 @@ class ConfigManager {
                     propertyModel.setValue(defaultValue);
                 }
                 propertyModel.rebootIfChanged = property.rebootIfChanged();
+                propertyModel.renderer = property.renderer();
                 propertyModel.type = returnType;
 
                 propertyModels.add(propertyModel);

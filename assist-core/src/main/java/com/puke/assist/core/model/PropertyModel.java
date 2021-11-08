@@ -1,5 +1,7 @@
 package com.puke.assist.core.model;
 
+import com.puke.assist.api.render.ConfigRenderer;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class PropertyModel implements Serializable {
     public String currentValue;
 
     public boolean rebootIfChanged;
+
+    public Class<? extends ConfigRenderer> renderer;
 
     public Class<?> type;
 

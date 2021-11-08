@@ -25,6 +25,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.puke.assist.api.ObjectHolder;
+import com.puke.assist.api.render.TextViewRenderer;
 import com.puke.assist.core.model.ConfigModel;
 import com.puke.assist.core.model.PropertyModel;
 
@@ -205,6 +207,7 @@ public class AssistConfigActivity extends Activity {
             throw new RuntimeException("Unknown view type: " + viewType);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             int itemViewType = getItemViewType(position);
@@ -219,7 +222,11 @@ public class AssistConfigActivity extends Activity {
                 case TYPE_PROP_INPUT:
                     PropertyInputHolder inputHolder = (PropertyInputHolder) holder;
                     inputHolder.tips.setText(getTips(propertyModel));
-                    inputHolder.input.setText(propertyModel.currentValue);
+
+                    Class<? extends TextViewRenderer> textViewRendererType = TextViewRenderer.class.isAssignableFrom(propertyModel.renderer)
+                            ? (Class<? extends TextViewRenderer>) propertyModel.renderer : TextViewRenderer.DefaultTextViewRenderer.class;
+                    ObjectHolder.getOrCreateInstance(textViewRendererType)
+                            .render(inputHolder.input, propertyModel.currentValue);
 
                     Object inputTag = inputHolder.input.getTag();
                     if ((inputTag instanceof TextWatcher)) {

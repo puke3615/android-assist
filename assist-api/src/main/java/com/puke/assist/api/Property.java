@@ -1,5 +1,7 @@
 package com.puke.assist.api;
 
+import com.puke.assist.api.render.ConfigRenderer;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -20,4 +22,6 @@ public @interface Property {
     String options() default "";
 
     boolean rebootIfChanged() default true;
+
+    Class<? extends ConfigRenderer> renderer() default ConfigRenderer.None.class;
 }
