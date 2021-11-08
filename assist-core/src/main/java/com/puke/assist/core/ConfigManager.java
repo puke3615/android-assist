@@ -45,7 +45,7 @@ class ConfigManager {
         for (ConfigModel configData : configData) {
             if (configData.hasProperties()) {
                 for (PropertyModel property : configData.properties) {
-                    String spValue = SpHelper.getString(context, configData.id, property.id);
+                    String spValue = SpHelper.getString(context, configData.id, property.id, property.defaultValue);
                     if (spValue != null) {
                         // Fill shared preferences value only when it's not null
                         property.setValue(spValue);
@@ -94,6 +94,7 @@ class ConfigManager {
                 PropertyModel propertyModel = new PropertyModel();
                 propertyModel.id = method.getName();
                 propertyModel.tips = property.tips();
+                propertyModel.defaultValue = property.defaultValue();
                 String propertyOptions = property.options();
                 Class<?> returnType = method.getReturnType();
                 String defaultValue = property.defaultValue();
@@ -142,7 +143,7 @@ class ConfigManager {
                     propertyModel.setValue(defaultValue);
                 }
                 propertyModel.rebootIfChanged = property.rebootIfChanged();
-                propertyModel.renderer = property.renderer();
+                propertyModel.hideDefaultText = property.hideDefaultText();
                 propertyModel.type = returnType;
 
                 propertyModels.add(propertyModel);

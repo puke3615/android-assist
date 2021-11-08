@@ -25,8 +25,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.puke.assist.api.ObjectHolder;
-import com.puke.assist.api.render.TextViewRenderer;
 import com.puke.assist.core.model.ConfigModel;
 import com.puke.assist.core.model.PropertyModel;
 
@@ -207,7 +205,6 @@ public class AssistConfigActivity extends Activity {
             throw new RuntimeException("Unknown view type: " + viewType);
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             int itemViewType = getItemViewType(position);
@@ -223,14 +220,20 @@ public class AssistConfigActivity extends Activity {
                     PropertyInputHolder inputHolder = (PropertyInputHolder) holder;
                     inputHolder.tips.setText(getTips(propertyModel));
 
-                    Class<? extends TextViewRenderer> textViewRendererType = TextViewRenderer.class.isAssignableFrom(propertyModel.renderer)
-                            ? (Class<? extends TextViewRenderer>) propertyModel.renderer : TextViewRenderer.DefaultTextViewRenderer.class;
-                    ObjectHolder.getOrCreateInstance(textViewRendererType)
-                            .render(inputHolder.input, propertyModel.currentValue);
+                    EditText editText = inputHolder.input;
+                    String currentValue = propertyModel.currentValue;
+                    if (!TextUtils.isEmpty(currentValue)
+                            && TextUtils.equals(propertyModel.defaultValue, currentValue)
+                            && propertyModel.hideDefaultText) {
+                        editText.setText(convertHideTextContent(currentValue));
+                        holder.itemView.setTag(R.id.tag_hide_default_text, true);
+                    } else {
+                        editText.setText(currentValue);
+                    }
 
-                    Object inputTag = inputHolder.input.getTag();
+                    Object inputTag = editText.getTag();
                     if ((inputTag instanceof TextWatcher)) {
-                        inputHolder.input.removeTextChangedListener(((TextWatcher) inputTag));
+                        editText.removeTextChangedListener(((TextWatcher) inputTag));
                     }
 
                     TextWatcher watcher = new TextWatcher() {
@@ -241,7 +244,37 @@ public class AssistConfigActivity extends Activity {
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            propertyModel.currentValue = s.toString();
+                            Object tagOfItemView = holder.itemView.getTag(R.id.tag_hide_default_text);
+                            boolean currentIsHideDefaultText = Boolean.TRUE.equals(tagOfItemView);
+                            if (currentIsHideDefaultText) {
+                                final TextWatcher thisWatcher = this;
+                                AlertDialog dialog = new AlertDialog.Builder(AssistConfigActivity.this)
+                                        .setTitle(null)
+                                        .setMessage("确认更改默认配置信息吗？")
+                                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                holder.itemView.setTag(R.id.tag_hide_default_text, false);
+                                                editText.setText(null);
+                                            }
+                                        })
+                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                editText.removeTextChangedListener(thisWatcher);
+                                                String hideTextContent = convertHideTextContent(propertyModel.defaultValue);
+                                                editText.setText(hideTextContent);
+                                                editText.setSelection(hideTextContent.length());
+                                                editText.addTextChangedListener(thisWatcher);
+                                            }
+                                        })
+                                        .create();
+                                dialog.setCanceledOnTouchOutside(false);
+                                dialog.setCancelable(false);
+                                dialog.show();
+                            } else {
+                                propertyModel.currentValue = s.toString();
+                            }
                         }
 
                         @Override
@@ -249,8 +282,8 @@ public class AssistConfigActivity extends Activity {
 
                         }
                     };
-                    inputHolder.input.setTag(watcher);
-                    inputHolder.input.addTextChangedListener(watcher);
+                    editText.setTag(watcher);
+                    editText.addTextChangedListener(watcher);
                     break;
                 case TYPE_PROP_BOOLEAN:
                     PropertySwitchHolder switchHolder = (PropertySwitchHolder) holder;
@@ -293,6 +326,14 @@ public class AssistConfigActivity extends Activity {
                     });
                     break;
             }
+        }
+
+        private String convertHideTextContent(String currentValue) {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < currentValue.length(); i++) {
+                builder.append("*");
+            }
+            return builder.toString();
         }
 
         private String getTips(PropertyModel propertyModel) {

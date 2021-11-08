@@ -1,7 +1,5 @@
 package com.puke.assist.core.model;
 
-import com.puke.assist.api.render.ConfigRenderer;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,6 +13,8 @@ public class PropertyModel implements Serializable {
 
     public String tips;
 
+    public String defaultValue;
+
     public String value;
 
     public List<String> options;
@@ -25,7 +25,7 @@ public class PropertyModel implements Serializable {
 
     public boolean rebootIfChanged;
 
-    public Class<? extends ConfigRenderer> renderer;
+    public boolean hideDefaultText;
 
     public Class<?> type;
 
