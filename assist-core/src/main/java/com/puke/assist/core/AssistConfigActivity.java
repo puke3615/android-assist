@@ -221,6 +221,11 @@ public class AssistConfigActivity extends Activity {
                     inputHolder.tips.setText(getTips(propertyModel));
 
                     EditText editText = inputHolder.input;
+                    Object inputTag = editText.getTag();
+                    if ((inputTag instanceof TextWatcher)) {
+                        editText.removeTextChangedListener(((TextWatcher) inputTag));
+                    }
+
                     String currentValue = propertyModel.currentValue;
                     if (!TextUtils.isEmpty(currentValue)
                             && TextUtils.equals(propertyModel.defaultValue, currentValue)
@@ -229,11 +234,6 @@ public class AssistConfigActivity extends Activity {
                         holder.itemView.setTag(R.id.tag_hide_default_text, true);
                     } else {
                         editText.setText(currentValue);
-                    }
-
-                    Object inputTag = editText.getTag();
-                    if ((inputTag instanceof TextWatcher)) {
-                        editText.removeTextChangedListener(((TextWatcher) inputTag));
                     }
 
                     TextWatcher watcher = new TextWatcher() {
