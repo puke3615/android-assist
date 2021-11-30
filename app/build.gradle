@@ -28,6 +28,6 @@ dependencies {
     implementation project(':assist-api')
     implementation project(':assist-core')
 
-//    implementation 'com.github.puke3615.android-assist:assist-api:0.0.10'
-//    implementation 'com.github.puke3615.android-assist:assist-core:0.0.10'
+//    implementation 'com.github.puke3615.android-assist:assist-api:1.0.0'
+//    implementation 'com.github.puke3615.android-assist:assist-core:1.0.0'
 }
