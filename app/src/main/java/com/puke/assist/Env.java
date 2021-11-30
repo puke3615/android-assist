@@ -8,9 +8,9 @@ import com.puke.assist.api.EnumTips;
  */
 public enum Env implements EnumTips {
 
-    PRE("预发"),
+    PRE("pre environment"),
 
-    ONLINE("线上"),
+    ONLINE("online environment"),
     ;
 
     private final String tips;

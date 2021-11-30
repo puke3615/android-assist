@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.puke.assist.api.Assist;
 import com.puke.assist.api.Config;
 import com.puke.assist.api.EnumTips;
 import com.puke.assist.api.Property;
@@ -59,12 +58,8 @@ class ConfigManager {
 
     @SuppressWarnings("rawtypes")
     private static List<ConfigModel> parseConfigDataInternal(Context context) {
-        List<Class<?>> configTypes = Assist.getConfigTypes();
-
-        if (configTypes == null) {
-            // Scan config type if no config type passed
-            configTypes = scanAllConfigType(context);
-        }
+        // Scan config type if no config type passed
+        List<Class<?>> configTypes = scanAllConfigType(context);
 
         List<ConfigModel> configModels = new ArrayList<>();
 
@@ -166,7 +161,8 @@ class ConfigManager {
             while (entries.hasMoreElements()) {
                 String className = entries.nextElement();
                 try {
-                    Class<?> type = Class.forName(className);
+                    ClassLoader classLoader = ConfigManager.class.getClassLoader();
+                    Class<?> type = Class.forName(className, false, classLoader);
                     if (type.isAnnotationPresent(Config.class)) {
                         result.add(type);
                     }

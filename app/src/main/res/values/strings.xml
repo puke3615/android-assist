@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">android-assist</string>
+    <string name="app_name">Assist Example</string>
+    <string name="main_tips">Enter config page by press volume-down key or shake device.</string>
+    <string name="main_label">Assist</string>
 </resources>

@@ -10,7 +10,7 @@ import android.os.Bundle;
  * @author puke
  * @version 2021/9/9
  */
-public class SimpleActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
+class SimpleActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".MainActivity"
-    tools:ignore="HardcodedText,UsingOnClickInXml">
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    tools:context=".MainActivity">
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onTest"
-        android:text="测试" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="18dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/main_label"
+        android:textColor="#333333"
+        android:textSize="60sp"
+        android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/main_config"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="6dp"
+        android:textColor="#333333"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="18dp"
+        android:background="#d4d4d4" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="@string/main_tips"
+        android:textColor="#999999"
+        android:textSize="16sp" />
 </LinearLayout>
