@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.puke.assist.api.Config;
 import com.puke.assist.api.EnumTips;
+import com.puke.assist.api.Order;
 import com.puke.assist.api.Property;
 import com.puke.assist.core.model.ConfigModel;
 import com.puke.assist.core.model.PropertyModel;
@@ -14,8 +15,12 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dalvik.system.DexFile;
 
@@ -76,7 +81,12 @@ class ConfigManager {
             }
 
             List<PropertyModel> propertyModels = new ArrayList<>();
-            for (Method method : configType.getMethods()) {
+            Method[] methods = configType.getMethods();
+
+            // Sort method
+            List<Method> sortedMethods = sortMethod(Arrays.asList(methods));
+
+            for (Method method : sortedMethods) {
                 Property property = method.getAnnotation(Property.class);
                 if (property == null) {
                     Log.w(TAG, String.format(
@@ -153,8 +163,33 @@ class ConfigManager {
         return configModels;
     }
 
+    private static List<Method> sortMethod(List<Method> methods) {
+        List<Method> result = new ArrayList<>(methods);
+        Map<Method, Integer> method2Order = new HashMap<>();
+        for (Method method : methods) {
+            Order order = method.getAnnotation(Order.class);
+            if (order != null) {
+                method2Order.put(method, order.value());
+            }
+        }
+
+        // Sort by order
+        Collections.sort(result, new Comparator<Method>() {
+            @Override
+            public int compare(Method o1, Method o2) {
+                // Get method's order
+                int order1 = getOrDefault(method2Order, o1, 0);
+                int order2 = getOrDefault(method2Order, o2, 0);
+                return order1 - order2;
+            }
+        });
+
+        return result;
+    }
+
     private static List<Class<?>> scanAllConfigType(Context context) {
         List<Class<?>> result = new ArrayList<>();
+        Map<Class<?>, Integer> type2Order = new HashMap<>();
         try {
             DexFile dexFile = new DexFile(context.getPackageCodePath());
             Enumeration<String> entries = dexFile.entries();
@@ -165,6 +200,11 @@ class ConfigManager {
                     Class<?> type = Class.forName(className, false, classLoader);
                     if (type.isAnnotationPresent(Config.class)) {
                         result.add(type);
+                        Order order = type.getAnnotation(Order.class);
+                        if (order != null) {
+                            // Remember type's order
+                            type2Order.put(type, order.value());
+                        }
                     }
                 } catch (ClassNotFoundException ignored) {
                 }
@@ -172,6 +212,23 @@ class ConfigManager {
         } catch (IOException e) {
             throw new RuntimeException("Scan config type failed", e);
         }
+
+        // Sort by order
+        Collections.sort(result, new Comparator<Class<?>>() {
+            @Override
+            public int compare(Class<?> o1, Class<?> o2) {
+                // Get type's order
+                int order1 = getOrDefault(type2Order, o1, 0);
+                int order2 = getOrDefault(type2Order, o2, 0);
+                return order1 - order2;
+            }
+        });
+
         return result;
+    }
+
+    private static <K, V> V getOrDefault(Map<K, V> map, K key, V defaultValue) {
+        V value = map.get(key);
+        return value == null ? defaultValue : value;
     }
 }

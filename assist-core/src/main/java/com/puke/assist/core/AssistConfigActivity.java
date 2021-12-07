@@ -29,9 +29,6 @@ import com.puke.assist.core.model.ConfigModel;
 import com.puke.assist.core.model.PropertyModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -46,12 +43,6 @@ public class AssistConfigActivity extends Activity {
     private static final int TYPE_PROP_INPUT = 1;
     private static final int TYPE_PROP_BOOLEAN = 2;
     private static final int TYPE_PROP_OPTION = 3;
-
-    private static final List<Integer> PROPERTY_ORDER = Arrays.asList(
-            TYPE_PROP_INPUT,
-            TYPE_PROP_BOOLEAN,
-            TYPE_PROP_OPTION
-    );
 
     private final List<ItemData> dataList = new ArrayList<>();
 
@@ -172,12 +163,6 @@ public class AssistConfigActivity extends Activity {
                     properties.add(new ItemData(TYPE_PROP_INPUT, configModel, propertyModel));
                 }
             }
-            Collections.sort(properties, new Comparator<ItemData>() {
-                @Override
-                public int compare(ItemData o1, ItemData o2) {
-                    return PROPERTY_ORDER.indexOf(o1.type) - PROPERTY_ORDER.indexOf(o2.type);
-                }
-            });
             dataList.addAll(properties);
         }
         return dataList;
