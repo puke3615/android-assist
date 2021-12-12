@@ -3,9 +3,9 @@
 1. Add dependency
 
    ```groovy
-   implementation 'com.github.puke3615.android-assist:assist-api:1.0.0'
-   // Optional (Comment assist-core dependency when you needn't modify config)
-   implementation 'com.github.puke3615.android-assist:assist-core:1.0.0'
+   implementation 'com.github.puke3615.android-assist:assist-api:1.0.3'
+   // Optional (Only take effect in debug environment)
+   debugImplementation 'com.github.puke3615.android-assist:assist-core:1.0.3'
    ```
 
 2. Define a Java interface
