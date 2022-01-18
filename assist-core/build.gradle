@@ -29,6 +29,9 @@ android {
 dependencies {
     // noinspection GradleCompatible
     implementation 'com.android.support:recyclerview-v7:27.1.1'
+    // 长连接
+    implementation 'org.java-websocket:Java-WebSocket:1.5.2'
+    implementation 'com.alibaba:fastjson:1.2.76'
 
     compileOnly project(':assist-api')
 }

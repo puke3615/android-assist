@@ -224,42 +224,17 @@ public class AssistConfigActivity extends Activity {
                     TextWatcher watcher = new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                            Object tagOfItemView = holder.itemView.getTag(R.id.tag_hide_default_text);
+                            boolean currentIsHideDefaultText = Boolean.TRUE.equals(tagOfItemView);
+                            if (currentIsHideDefaultText) {
+                                holder.itemView.setTag(R.id.tag_hide_default_text, false);
+                                editText.setText(null);
+                            }
                         }
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            Object tagOfItemView = holder.itemView.getTag(R.id.tag_hide_default_text);
-                            boolean currentIsHideDefaultText = Boolean.TRUE.equals(tagOfItemView);
-                            if (currentIsHideDefaultText) {
-                                final TextWatcher thisWatcher = this;
-                                AlertDialog dialog = new AlertDialog.Builder(AssistConfigActivity.this)
-                                        .setTitle(null)
-                                        .setMessage("确认更改默认配置信息吗？")
-                                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                holder.itemView.setTag(R.id.tag_hide_default_text, false);
-                                                editText.setText(null);
-                                            }
-                                        })
-                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                editText.removeTextChangedListener(thisWatcher);
-                                                String hideTextContent = convertHideTextContent(propertyModel.defaultValue);
-                                                editText.setText(hideTextContent);
-                                                editText.setSelection(hideTextContent.length());
-                                                editText.addTextChangedListener(thisWatcher);
-                                            }
-                                        })
-                                        .create();
-                                dialog.setCanceledOnTouchOutside(false);
-                                dialog.setCancelable(false);
-                                dialog.show();
-                            } else {
-                                propertyModel.currentValue = s.toString();
-                            }
+                            propertyModel.currentValue = s.toString();
                         }
 
                         @Override

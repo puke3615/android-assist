@@ -206,7 +206,7 @@ class ConfigManager {
                             type2Order.put(type, order.value());
                         }
                     }
-                } catch (ClassNotFoundException ignored) {
+                } catch (Throwable ignored) {
                 }
             }
         } catch (IOException e) {

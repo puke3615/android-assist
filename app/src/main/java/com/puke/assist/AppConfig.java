@@ -37,4 +37,8 @@ public interface AppConfig {
     @Order(6)
     @Property(tips = "String option", defaultValue = "abc", options = "Jack,Tom,Lucy")
     String option();
+
+    @Order(7)
+    @Property(tips = "hideText", defaultValue = "dadad", hideDefaultText = true)
+    String hideText();
 }

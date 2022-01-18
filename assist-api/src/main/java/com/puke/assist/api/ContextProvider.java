@@ -14,7 +14,7 @@ public class ContextProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         AssistLog.i("Assist setup.");
-        AppContext.setContext(getContext());
+        AppContext.setContext(getContext().getApplicationContext());
         try {
             Class.forName("com.puke.assist.core.AssistDynamicImpl");
         } catch (ClassNotFoundException ignored) {

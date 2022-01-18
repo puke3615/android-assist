@@ -14,7 +14,8 @@ class AssistDynamicImpl {
 
     static {
         AssistLog.i("AssistDynamicImpl setup.");
-        Application application = (Application) AppContext.getContext().getApplicationContext();
+        Application application = (Application) AppContext.getContext();
         Assist.setConfigService(new ModifiableConfigService(application));
+        RobotManager.init(application);
     }
 }
