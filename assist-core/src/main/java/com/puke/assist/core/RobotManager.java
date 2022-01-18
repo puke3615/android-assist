@@ -46,12 +46,15 @@ class RobotManager {
                 activityRef = new WeakReference<>(activity);
 
                 if (canConnect(activity)) {
-                    EXECUTOR.execute(() -> {
-                        try {
-                            client = new WsClient(new URI(WS_URL));
-                            client.connect();
-                        } catch (Exception e) {
-                            AssistLog.e("连接失败", e);
+                    EXECUTOR.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                client = new WsClient(new URI(WS_URL));
+                                client.connect();
+                            } catch (Exception e) {
+                                AssistLog.e("连接失败", e);
+                            }
                         }
                     });
                 }
@@ -107,14 +110,17 @@ class RobotManager {
             return;
         }
 
-        HANDLER.post(() -> {
-            View currentFocus = activity.getCurrentFocus();
-            if ((!(currentFocus instanceof EditText))) {
-                return;
-            }
+        HANDLER.post(new Runnable() {
+            @Override
+            public void run() {
+                View currentFocus = activity.getCurrentFocus();
+                if ((!(currentFocus instanceof EditText))) {
+                    return;
+                }
 
-            EditText input = (EditText) currentFocus;
-            input.setText(text);
+                EditText input = (EditText) currentFocus;
+                input.setText(text);
+            }
         });
     }
 
@@ -142,17 +148,17 @@ class RobotManager {
 
         @Override
         public void onOpen(ServerHandshake handshakedata) {
-            System.out.println("new connection opened");
+//            System.out.println("new connection opened");
         }
 
         @Override
         public void onClose(int code, String reason, boolean remote) {
-            System.out.println("closed with exit code " + code + " additional info: " + reason);
+//            System.out.println("closed with exit code " + code + " additional info: " + reason);
         }
 
         @Override
         public void onMessage(String message) {
-            System.out.println("received message: " + message);
+//            System.out.println("received message: " + message);
 
             try {
                 RobotAction action = JSON.parseObject(message, RobotAction.class);
@@ -168,12 +174,12 @@ class RobotManager {
 
         @Override
         public void onMessage(ByteBuffer message) {
-            System.out.println("received ByteBuffer");
+//            System.out.println("received ByteBuffer");
         }
 
         @Override
         public void onError(Exception ex) {
-            System.err.println("an error occurred:" + ex);
+//            System.err.println("an error occurred:" + ex);
         }
     }
 
